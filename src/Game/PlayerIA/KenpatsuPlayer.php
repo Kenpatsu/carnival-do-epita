@@ -11,9 +11,27 @@ class KenpatsuPlayer extends Player
 
     public function getChoice()
     {
-        $resChoice = parent::paperChoice();
-        $myLastChoice = $this->result->getLastChoiceFor($this->mySide);
-
+        $rockNumber = 0;
+        $paperNumber = 0;
+        $scissorsNumber = 0;
+        if ($this->result->getLastChoiceFor($this->mySide) == 0)
+            return parent::rockChoice();
+        $oppChoice = $this->result->getChoicesFor($this->opponentSide);
+        foreach ($oppChoice as $choice) {
+            if ($choice == parent::paperChoice())
+                $paperNumber ++;
+            if ($choice == parent::rockChoice())
+                $rockNumber ++;
+            if ($choice == parent::scissorsChoice())
+                $scissorsNumber ++;
+        }
+        if (($paperNumber > $rockNumber) && ($paperNumber > $scissorsNumber))
+            return parent::scissorsChoice();
+        if (($rockNumber > $paperNumber) && ($rockNumber > $scissorsNumber))
+            return parent::paperChoice();
+        if (($scissorsNumber > $paperNumber) && ($scissorsNumber > $rockNumber))
+            return parent::rockChoice();
+        return parent::paperChoice();
         // -------------------------------------    -----------------------------------------------------
         // How to get my Last Choice           ?    $this->result->getLastChoiceFor($this->mySide) -- if 0 (first round)
         // How to get the opponent Last Choice ?    $this->result->getLastChoiceFor($this->opponentSide) -- if 0 (first round)
@@ -38,6 +56,5 @@ class KenpatsuPlayer extends Player
         // How can i display the result of each round ? $this->prettyDisplay()
         // -------------------------------------    -----------------------------------------------------
 
-        return parent::paperChoice();
     }
 };
