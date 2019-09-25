@@ -9,6 +9,10 @@ class KenpatsuPlayer extends Player
     protected $opponentSide;
     protected $result;
 
+    /**
+     * @return boolean
+     * Check if we are in a loosing streak
+     */
     protected function cCheck($list) {
         $act = $list[sizeof($list) - 6];
         for ($i = sizeof($list) - 5 ; $i < sizeof($list) - 1 ; $i++) {
@@ -25,10 +29,9 @@ class KenpatsuPlayer extends Player
         $rockNumber = 0;
         $paperNumber = 0;
         $scissorsNumber = 0;
-        /*if ($this->result->getLastChoiceFor($this->mySide) == 0)
-            return parent::rockChoice();*/
         $oppChoice = $this->result->getChoicesFor($this->opponentSide);
         $myChoice = $this->result->getChoicesFor($this->mySide);
+        //Reach opp Choices list and count occurence of each type of choice
         foreach ($oppChoice as $choice) {
             if ($choice == parent::paperChoice())
                 $paperNumber ++;
@@ -37,6 +40,7 @@ class KenpatsuPlayer extends Player
             if ($choice == parent::scissorsChoice())
                 $scissorsNumber ++;
         }
+        //If we are in a loosing streak, change choice for only one move to disturb algorithm
         if ($rockNumber + $scissorsNumber + $paperNumber > 6) {
             $check = $this->cCheck($myChoice);
             if ($check == true && $this->result->getLastChoiceFor($this->mySide) == parent::rockChoice())
@@ -46,6 +50,7 @@ class KenpatsuPlayer extends Player
             if ($check == true && $this->result->getLastChoiceFor($this->mySide) == parent::scissorsChoice())
                 return parent::paperChoice();
         }
+        //Count occurences and make choice
         if (($paperNumber > $rockNumber) && ($paperNumber > $scissorsNumber))
             return parent::scissorsChoice();
         if (($rockNumber > $paperNumber) && ($rockNumber > $scissorsNumber))
