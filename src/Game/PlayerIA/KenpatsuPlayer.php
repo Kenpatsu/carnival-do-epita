@@ -14,8 +14,8 @@ class KenpatsuPlayer extends Player
         $rockNumber = 0;
         $paperNumber = 0;
         $scissorsNumber = 0;
-        if ($this->result->getLastChoiceFor($this->mySide) == 0)
-            return parent::rockChoice();
+        /*if ($this->result->getLastChoiceFor($this->mySide) == 0)
+            return parent::rockChoice();*/
         $oppChoice = $this->result->getChoicesFor($this->opponentSide);
         foreach ($oppChoice as $choice) {
             if ($choice == parent::paperChoice())
