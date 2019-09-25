@@ -9,6 +9,17 @@ class KenpatsuPlayer extends Player
     protected $opponentSide;
     protected $result;
 
+    protected function cCheck($list) {
+        $act = $list[sizeof($list) - 6];
+        for ($i = sizeof($list) - 5 ; $i < sizeof($list) - 1 ; $i++) {
+            if ($list[$i] != $act)
+                return false;
+        }
+        if ($this->result->getLastScoreFor($this->mySide) == 0)
+            return true;
+        return false;
+    }
+
     public function getChoice()
     {
         $rockNumber = 0;
@@ -17,6 +28,7 @@ class KenpatsuPlayer extends Player
         /*if ($this->result->getLastChoiceFor($this->mySide) == 0)
             return parent::rockChoice();*/
         $oppChoice = $this->result->getChoicesFor($this->opponentSide);
+        $myChoice = $this->result->getChoicesFor($this->mySide);
         foreach ($oppChoice as $choice) {
             if ($choice == parent::paperChoice())
                 $paperNumber ++;
@@ -24,6 +36,15 @@ class KenpatsuPlayer extends Player
                 $rockNumber ++;
             if ($choice == parent::scissorsChoice())
                 $scissorsNumber ++;
+        }
+        if ($rockNumber + $scissorsNumber + $paperNumber > 6) {
+            $check = $this->cCheck($myChoice);
+            if ($check == true && $this->result->getLastChoiceFor($this->mySide) == parent::rockChoice())
+                return parent::scissorsChoice();
+            if ($check == true && $this->result->getLastChoiceFor($this->mySide) == parent::paperChoice())
+                return parent::rockChoice();
+            if ($check == true && $this->result->getLastChoiceFor($this->mySide) == parent::scissorsChoice())
+                return parent::paperChoice();
         }
         if (($paperNumber > $rockNumber) && ($paperNumber > $scissorsNumber))
             return parent::scissorsChoice();
